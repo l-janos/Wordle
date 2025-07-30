@@ -1,8 +1,29 @@
 <div class="min-h-screen bg-gray-200 flex flex-col items-center justify-center p-4">
-  <h1 class="text-4xl font-bold mb-6">Wordlee🎯</h1>
+  <h1 class="text-4xl font-bold mb-6">WordLee🎯</h1>
 
-  <ng-container>
-    <app-board></app-board>
+  <ng-container *ngIf="!isLoading;else loading">
+    <app-board [guesses]="guesses"></app-board>
+
+    <app-keyboard
+    (letter)="onKeyPress($event)"
+    (enter)="onEnter()"
+    (backspace)="onbackSpace()"
+    ></app-keyboard>
+
+    <p *ngIf="isGameOver && isCorrect" class="mt-6 text-2xl font-semibold text-green-700 animate-bounce">
+      🎉🎉Gratulálok, kitaláltad a szót🎉🎉
+    </p>
+
+    <p *ngIf="isGameOver && !isCorrect" class="mt-6 text-2xl font-semibold text-red-700 animate-pulse">
+      ❌❌nem sikerült! Ez a szó volt : {{gameService.getTargetWord()}}❌❌
+    </p>
+
+    <button *ngIf="isGameOver" (click)="onRestart()"
+    class="mt-4 px-6 py-4 bg-blue-400 text-white rounded hover:bg-blue-700 transition">
+      Újraindítás
+    </button>
   </ng-container>
-
+  <ng-template #loading>
+    <p class="text-gray-500 text-lg animate-pulse">Betöltés...</p>
+  </ng-template>
 </div>

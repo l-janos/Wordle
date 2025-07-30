@@ -1,1 +1,9 @@
-<p>keyboard works!</p>
+<div *ngFor="let row of rows" class="flex justify-center gap-1 py-2 mx-auto px-4">
+  <button
+  *ngFor="let key of row"
+  class="w-8 sm:w-12 h-12 rounded bg-gray-300 font-bold"
+  (click)="letter.emit(key)">
+
+    {{key}}
+  </button>
+</div>

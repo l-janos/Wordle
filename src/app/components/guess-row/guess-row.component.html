@@ -1,1 +1,8 @@
-<p>guess-row works!</p>
+<div class="flex gap-1 justify-center py-1">
+  <div *ngFor="let letter of guess"
+  class="w-16 h-16 border-2 border-gray-500 rounded text-2xl font-bold flex items-center justify-center uppercase transition-all duration-300"
+       [ngClass]="letter.state | letterColor"
+  >
+    {{letter.letter}}
+  </div>
+</div>

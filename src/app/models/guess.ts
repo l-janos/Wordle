@@ -3,4 +3,4 @@ export interface LetterState {
   state: 'correct' | 'present' | 'absent' | '' ;
 }
 
-export type Guess = LetterState;
+export type Guess = LetterState[];

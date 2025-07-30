@@ -31,19 +31,48 @@ export class GameComponent {
     this.guesses = [];
     this.currentInput = "";
     this.currentRowIndex = 0;
-    //TODO: metódust kell majd használni a gameService-val
+
+    await this.gameService.fetchTargetWord();
+
+    this.guesses = Array(this.gameService.maxGuesses).fill(null)
+      .map(()=>this.gameService.getEmptyGuesses());
+    this.isLoading = false;
   }
   protected updateCurrentRowDisplay(){
-    //TODO: Mindig a megfelelő sort frissítjük
+    const row = this.guesses[this.currentRowIndex];
+    for (let i = 0; i < 5; i++){
+      row[i].letter = this.currentInput[i] || '';
+      row[i].state = '';
+    }
   }
   protected onKeyPress(letter:string){
-    //TODO: Melyik billentyűt nyomjuk le gépen, vagy telefonon
+
+    if (this.isCorrect || this.currentInput.length >= 5) return;
+    this.currentInput += letter.toUpperCase();
+    this.updateCurrentRowDisplay();
   }
   protected onbackSpace(){
-    //TODO: Utolsó karaktert törölni
+    if (this.isGameOver || this.currentInput.length === 0) return;
+    this.currentInput = this.currentInput.slice(0, -1);
+    this.updateCurrentRowDisplay();
   }
   protected onEnter(){
-    //TODO: Küldje el a tippet
+    if(this.isGameOver || this.currentInput.length !== 5) return;
+
+    this.guesses[this.currentRowIndex] = this.gameService.evaluateGuess(this.currentInput);
+
+    const target = this.gameService.getTargetWord();
+
+    if(this.currentInput.toUpperCase() === target){
+      this.isCorrect = true;
+      this.isGameOver = true;
+
+    } else if(this.currentRowIndex === this.guesses.length-1){
+      this.isGameOver = true;
+    } else{
+      this.currentRowIndex++;
+      this.currentInput = '';
+    }
   }
   protected onRestart(){
     this.startNewGame();
@@ -61,6 +90,6 @@ export class GameComponent {
     } else if (/^[A-Z]$/.test(key)){
       this.onKeyPress(key)
     }
-  }
+}
 
 }
